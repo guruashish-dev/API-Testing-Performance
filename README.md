@@ -68,3 +68,43 @@ npm run dev
 - Slow APIs are flagged when response time is greater than 1000ms.
 - API base URL is configurable via `VITE_API_BASE_URL`.
 - UI includes loading states, toasts, JSON syntax highlighting, and response copy feature.
+
+## Deployment Recommendation
+- Use **Vercel** for this project.
+- GitHub Pages can host only the frontend static site and cannot run the Node/Express backend.
+
+## Deployed On Vercel (Recommended)
+
+Deploy as two Vercel projects from the same repository:
+
+1. **Backend project**
+- Import the repo in Vercel.
+- Set **Root Directory** to `backend`.
+- Add environment variables:
+  - `MONGODB_URI`
+  - `CLIENT_ORIGIN` (use your frontend Vercel domain, comma-separated if multiple)
+  - `API_TIMEOUT_MS` (optional)
+  - `SLOW_API_THRESHOLD_MS` (optional)
+  - `AUTO_TEST_INTERVAL_SECONDS=0` (recommended on serverless)
+- Deploy.
+- Your API will be available on your backend Vercel domain, for example:
+  - `https://your-backend.vercel.app/health`
+  - `https://your-backend.vercel.app/api/analytics`
+
+2. **Frontend project**
+- Import the same repo in Vercel.
+- Set **Root Directory** to `frontend`.
+- Add environment variable:
+  - `VITE_API_BASE_URL=https://your-backend.vercel.app/api`
+- Deploy.
+
+3. **CORS alignment**
+- In backend env, set `CLIENT_ORIGIN` to your deployed frontend URL, for example:
+  - `https://your-frontend.vercel.app`
+
+4. **Redeploy after env updates**
+- After changing env vars in Vercel, trigger a redeploy so changes are picked up.
+\
+
+
+  

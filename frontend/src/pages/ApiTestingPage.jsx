@@ -17,6 +17,23 @@ function safeJsonParse(value, fallback) {
   }
 }
 
+function isInternalBackendEndpoint(urlValue) {
+  const configuredBase = (import.meta.env.VITE_API_BASE_URL || "").trim();
+  if (!configuredBase) {
+    return false;
+  }
+
+  try {
+    const base = new URL(configuredBase);
+    const target = new URL(urlValue);
+    const normalizedBasePath = base.pathname.endsWith("/") ? base.pathname : `${base.pathname}/`;
+
+    return target.origin === base.origin && target.pathname.startsWith(normalizedBasePath);
+  } catch (error) {
+    return false;
+  }
+}
+
 const initialState = {
   url: "",
   method: "GET",
@@ -60,6 +77,12 @@ export default function ApiTestingPage() {
   const buildPayload = () => {
     if (!form.url.trim()) {
       throw new Error("URL is required");
+    }
+
+    if (isInternalBackendEndpoint(form.url.trim())) {
+      throw new Error(
+        "Use an external target API URL here (example: https://jsonplaceholder.typicode.com/posts/1). The app's own /api routes are control endpoints, not test targets."
+      );
     }
 
     const headers = safeJsonParse(form.headersText, {});
@@ -206,7 +229,7 @@ export default function ApiTestingPage() {
         </div>
       </form>
 
-      <div className="space-y-4 rounded-2xl border border-white/10 bg-panelSoft/80 p-5">
+      <div className="min-w-0 space-y-4 rounded-2xl border border-white/10 bg-panelSoft/80 p-5">
         <h2 className="text-lg font-semibold">Response Output</h2>
         {result ? (
           <>

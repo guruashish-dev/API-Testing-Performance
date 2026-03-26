@@ -25,10 +25,15 @@ export default function JsonResponseViewer({ payload }) {
       <SyntaxHighlighter
         language="json"
         style={oneDark}
+        wrapLongLines
+        wrapLines
         customStyle={{
           margin: 0,
           borderRadius: "10px",
           maxHeight: "360px",
+          overflowX: "auto",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
           background: "#050607",
         }}
       >
