@@ -1,1 +1,1 @@
-mongodb+srv://guru06ashish_db_user:1rfegeachWKqbG9m@api-monitoring.21hbtmw.mongodb.net/api-monitor?retryWrites=true&w=majority&appName=api-monitoring
+
